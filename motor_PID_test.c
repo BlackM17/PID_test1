@@ -6,13 +6,17 @@
 int wheelDia=3.25;// wheel diameter for calculations
 int distance=12; //desired distance
 int Ttick=360;//total ticks for 1 rotation
+int kP=0.5;//Proportional constant
+int kI=0.25;//Integral constant
+int kD=0.25;// Derivative constant
 
 void forward(int d){
 	int FwdTicks=Ttick*d/(wheelDia*PI);
 	resetMotorEncoder(LeftM);
 	while(abs(getMotorEncoder(LeftM))< FwdTicks){
-	motor(LeftM)=60;
-	motor(RightM)=60;
+		error=FwdTicks-getMotorEncoder(LeftM);
+	motor(LeftM)=error;
+	motor(RightM)=error;
 }
 motor(LeftM)=0;
 motor(RightM)=0;
@@ -42,7 +46,7 @@ task main()
 	int i;
 	for(i=0;i<1000;i++){
 	forward(distance);
-  wait1Msec(2000);
-	turnR();
+    wait1Msec(2000);
+	//turnR();
 }
 }
